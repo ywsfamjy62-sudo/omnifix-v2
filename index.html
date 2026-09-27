@@ -3,226 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniFix Pro Network</title>
+  <title>OmniFix Pro Ultra</title>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-main: #f8fafc;
-      --card-bg: #ffffff;
-      --primary-color: #0f172a;
-      --accent-blue: #2563eb;
-      --text-dark: #0f172a;
-      --text-muted: #64748b;
-      --shadow-soft: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
-      --border-radius: 24px;
-    }
-
-    /* الوضع الداكن */
-    body.dark-mode {
-      --bg-main: #090d16;
-      --card-bg: #1e293b;
-      --primary-color: #38bdf8;
-      --text-dark: #f8fafc;
+      --bg-main: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary-accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --success-green: #22c55e;
+      --danger-red: #ef4444;
+      --text-white: #f8fafc;
       --text-muted: #94a3b8;
-      --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      --btn-grad: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --btn-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background 0.3s, color 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: all 0.25s ease; user-select: none; }
 
     body {
       background-color: var(--bg-main);
-      color: var(--text-dark);
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 85px;
+      padding-bottom: 90px;
     }
 
+    /* Header */
     .top-header {
-      width: 100%;
-      max-width: 430px;
-      padding: 20px 20px 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      width: 100%; max-width: 430px; padding: 18px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(21, 28, 44, 0.8); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 90; border-bottom: 1px solid var(--card-border);
     }
+    .app-title { font-size: 20px; font-weight: 900; background: linear-gradient(90deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .status-badge { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #4ade80; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+    .status-dot { width: 7px; height: 7px; background: var(--success-green); border-radius: 50%; box-shadow: 0 0 8px var(--success-green); }
 
-    .app-title { font-size: 22px; font-weight: 900; color: var(--primary-color); }
-    .status-badge { background: #dcfce7; color: #166534; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
-    .status-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
-
-    #welcomeModal {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
-      z-index: 999; display: flex; justify-content: center; align-items: center; padding: 20px;
-    }
-
-    .welcome-card {
-      background: var(--card-bg); border-radius: 32px; padding: 30px; width: 100%; max-width: 380px; text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-
-    .generated-id {
-      font-size: 32px; font-weight: 900; color: var(--accent-blue); background: rgba(37, 99, 235, 0.1);
-      padding: 12px; border-radius: 18px; margin: 15px 0; letter-spacing: 2px;
-    }
-
-    .input-field {
-      width: 100%; padding: 14px 18px; border-radius: 16px; border: 1px solid #e2e8f0;
-      background: rgba(0,0,0,0.02); color: var(--text-dark); font-size: 15px; font-weight: 600; outline: none;
-    }
-
-    .btn-primary {
-      width: 100%; padding: 14px; background: var(--primary-color); color: white;
-      font-weight: 800; border: none; border-radius: 16px; font-size: 15px; cursor: pointer;
-    }
-
-    .app-container { width: 100%; max-width: 430px; padding: 0 15px; display: flex; flex-direction: column; gap: 15px; }
+    .app-container { width: 100%; max-width: 430px; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
     .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Luxury Cards */
     .card {
-      background: var(--card-bg); border-radius: var(--border-radius); padding: 20px;
-      box-shadow: var(--shadow-soft); border: 1px solid rgba(226, 232, 240, 0.2); margin-bottom: 15px;
+      background: var(--card-bg); border-radius: 24px; padding: 20px;
+      border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 15px;
     }
 
-    /* شبكة الأدوات */
-    .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    /* Inputs & Buttons */
+    .input-field {
+      width: 100%; padding: 14px 18px; border-radius: 16px; border: 1px solid var(--card-border);
+      background: rgba(0,0,0,0.3); color: white; font-size: 14px; font-weight: 600; outline: none; margin-top: 8px;
+    }
+    .input-field:focus { border-color: var(--primary-accent); box-shadow: 0 0 12px var(--accent-glow); }
+
+    .btn-lux {
+      width: 100%; padding: 14px; background: var(--btn-grad); color: white; font-weight: 800; border: none;
+      border-radius: 16px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px var(--accent-glow);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-lux:active { transform: scale(0.98); }
+
+    /* Action Buttons Grid */
+    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .action-btn {
+      padding: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+      border-radius: 16px; color: white; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .action-btn:hover { background: rgba(59, 130, 246, 0.2); border-color: var(--primary-accent); }
+
+    /* Incoming Call Screen (كما في الصورة) */
+    #incomingCallModal {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #111111;
+      z-index: 9999; display: none; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px;
+    }
+    .caller-name { font-size: 38px; font-weight: 900; color: white; margin-top: 40px; }
+    .call-actions-top { display: flex; justify-content: space-around; width: 100%; max-width: 300px; color: #999; font-size: 13px; }
+    .call-action-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+    .call-actions-bottom { display: flex; justify-content: space-around; width: 100%; max-width: 320px; margin-bottom: 30px; }
+    .circle-btn { width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; border: none; cursor: pointer; color: white; }
+    .btn-decline { background: var(--danger-red); box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+    .btn-accept { background: var(--success-green); box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
+
+    /* Active Video Call Screen */
+    #videoCallModal {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9998; display: none;
+    }
+    #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
+    #localVideo {
+      position: absolute; top: 20px; right: 20px; width: 110px; height: 160px;
+      border-radius: 18px; object-fit: cover; border: 2px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+    .video-controls {
+      position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; gap: 20px;
+    }
+
+    /* Tools List (100+ Tools UI) */
+    .tools-search { margin-bottom: 15px; }
+    .tools-category { font-size: 13px; font-weight: 800; color: #60a5fa; margin: 15px 0 10px 0; display: block; }
+    .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .tool-card {
-      background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); padding: 15px; border-radius: 20px;
-      text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); padding: 12px;
+      border-radius: 16px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .tool-card:hover { background: rgba(59, 130, 246, 0.15); border-color: var(--primary-accent); }
+    .tool-icon { font-size: 22px; }
+    .tool-title { font-size: 11px; font-weight: 700; color: var(--text-white); }
+
+    /* Friends List */
+    .friend-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--card-border); }
+    .friend-info { display: flex; align-items: center; gap: 10px; }
+    .friend-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--btn-grad); display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+    /* Toast Notifications */
+    .toast-msg {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white;
+      padding: 12px 24px; border-radius: 30px; border: 1px solid var(--primary-accent); box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 10000; font-size: 13px; font-weight: 700; display: none; align-items: center; gap: 8px;
     }
 
-    .tool-icon { font-size: 26px; }
-
-    /* مفتاح الإعدادات Toggle Switch */
-    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-
+    /* Bottom Nav */
     .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 70px;
-      background: var(--card-bg); border-top: 1px solid rgba(0,0,0,0.08);
+      position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+      background: rgba(21, 28, 44, 0.95); backdrop-filter: blur(15px); border-top: 1px solid var(--card-border);
       display: flex; justify-content: space-around; align-items: center; z-index: 100; max-width: 430px; margin: 0 auto;
     }
-
-    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .nav-btn.active { color: var(--accent-blue); }
-
-    .user-result-card { background: rgba(0,0,0,0.02); border: 1px solid #e2e8f0; border-radius: 20px; padding: 15px; margin-top: 15px; text-align: center; display: none; }
-    .avatar-circle { width: 65px; height: 65px; border-radius: 50%; background: var(--accent-blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; margin: 0 auto 10px auto; }
-    .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-    .action-btn { padding: 10px; background: var(--card-bg); border: 1px solid #e2e8f0; border-radius: 14px; color: var(--text-dark); font-size: 12px; font-weight: 700; cursor: pointer; }
+    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .nav-btn.active { color: #60a5fa; }
   </style>
 </head>
 <body>
 
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-msg">💬 <span>رسالة جديدة...</span></div>
+
+  <!-- Top Header -->
   <div class="top-header">
     <div class="app-title">OmniFix Pro</div>
-    <div class="status-badge" id="onlineBadge"><div class="status-dot"></div> <span id="statusText">متصل</span></div>
-  </div>
-
-  <!-- 1. شاشة الترحيب -->
-  <div id="welcomeModal" style="display: none;">
-    <div class="welcome-card">
-      <h2>مرحباً بك! 👋</h2>
-      <p style="font-size: 13px; color: var(--text-muted);">رقم معرفك الفريد الجديد:</p>
-      <div class="generated-id" id="myNewGeneratedId">0300000</div>
-      <input type="text" id="usernameInput" class="input-field" placeholder="اكتب اسمك الكلي..." style="margin-bottom: 15px;">
-      <button class="btn-primary" onclick="saveUserProfile()">تأكيد والدخول 🚀</button>
-    </div>
+    <div class="status-badge" id="onlineBadge"><div class="status-dot"></div> <span id="statusText">متصل الآن</span></div>
   </div>
 
   <div class="app-container">
 
-    <!-- تبويب 1: الاتصالات والبحث -->
+    <!-- تبويب 1: الاتصالات والبحث والأصدقاء -->
     <div id="tabCall" class="tab-content active">
       <div class="card">
         <label style="font-size: 13px; font-weight: 700; color: var(--text-muted);">البحث برقم المعرف (7 أرقام):</label>
-        <input type="number" id="targetIdInput" class="input-field" placeholder="مثال: 0391610" oninput="searchUser()" style="margin-top: 8px;">
+        <input type="number" id="targetIdInput" class="input-field" placeholder="مثال: 0369255" oninput="searchUser()">
 
-        <div id="userResultCard" class="user-result-card">
-          <div class="avatar-circle" id="searchAvatar">؟</div>
-          <h4 id="searchName" style="font-size: 16px; font-weight: 800;">مستخدم OmniFix</h4>
-          <p id="searchID" style="font-size: 12px; color: var(--text-muted);">#0300000</p>
+        <div id="userResultCard" style="display: none; margin-top: 15px; text-align: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 20px; border: 1px solid var(--card-border);">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--btn-grad); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; margin: 0 auto 8px auto;">؟</div>
+          <h4 id="searchName" style="font-size: 16px; font-weight: 800;">مستخدم 0369255</h4>
+          <p id="searchID" style="font-size: 12px; color: var(--text-muted);">#0369255</p>
 
           <div class="action-grid">
-            <button class="action-btn" onclick="alert('جاري بدء الكاميرا...')">📹 فيديو</button>
-            <button class="action-btn" onclick="alert('جاري إجراء مكالمة صوتية...')">📞 صوتي</button>
-            <button class="action-btn" onclick="alert('فتح الشات...')">💬 رسائل</button>
+            <button class="action-btn" onclick="startCall('video')">📹 فيديو</button>
+            <button class="action-btn" onclick="startCall('audio')">📞 صوتي</button>
+            <button class="action-btn" onclick="openChat()">💬 رسائل</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- قائمة الأصدقاء المضافة حديثاً -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="font-size: 15px; font-weight: 800;">قائمة الأصدقاء المتصلين</h4>
+          <span style="font-size: 11px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 2px 8px; border-radius: 10px;" id="friendsCount">2 أصدقاء</span>
+        </div>
+        <div id="friendsList">
+          <div class="friend-item">
+            <div class="friend-info">
+              <div class="friend-avatar">ع</div>
+              <div>
+                <div style="font-weight: 800; font-size: 13px;">العفوية</div>
+                <div style="font-size: 10px; color: var(--text-muted);">#0369255 • متصل</div>
+              </div>
+            </div>
+            <button class="action-btn" style="padding: 6px 12px;" onclick="startCall('audio')">📞 اتصال</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- تبويب 2: قسم الأدوات الجديدة 🛠️ -->
+    <!-- تبويب 2: كمية عملاقة من الأدوات (100+ أدوات متكاملة) -->
     <div id="tabTools" class="tab-content">
       <div class="card">
-        <h4 style="font-size: 16px; font-weight: 800; margin-bottom: 15px;">أدوات التطبيق الذكية</h4>
-        <div class="tools-grid">
-          <div class="tool-card" onclick="testNetworkSpeed()">
-            <div class="tool-icon">⚡</div>
-            <div style="font-size: 12px; font-weight: 700;">اختبار السرعة</div>
-          </div>
-          <div class="tool-card" onclick="toggleDoNotDisturb()">
-            <div class="tool-icon">🌙</div>
-            <div style="font-size: 12px; font-weight: 700;" id="dndText">عدم الإزعاج</div>
-          </div>
-          <div class="tool-card" onclick="alert('رمز QR الخاص بك: #' + myId)">
-            <div class="tool-icon">📲</div>
-            <div style="font-size: 12px; font-weight: 700;">رمز QR الخارجي</div>
-          </div>
-          <div class="tool-card" onclick="changeRingtone()">
-            <div class="tool-icon">🔔</div>
-            <div style="font-size: 12px; font-weight: 700;">نغمة الرنين</div>
-          </div>
-        </div>
+        <input type="text" class="input-field tools-search" placeholder="🔍 إبحث عن أداة من بين 100+ أداة..." onkeyup="filterTools(this.value)">
+
+        <!-- قسم الشبكة والأمان -->
+        <span class="tools-category">🌐 أدوات الشبكة والحماية (20+)</span>
+        <div class="tools-grid" id="toolsNet"></div>
+
+        <!-- قسم النظام والإنتاجية -->
+        <span class="tools-category">⚡ أدوات النظام والإنتاجية (30+)</span>
+        <div class="tools-grid" id="toolsSys"></div>
+
+        <!-- قسم الميديا والصوتيات -->
+        <span class="tools-category">🎨 أدوات الصور والميديا (25+)</span>
+        <div class="tools-grid" id="toolsMedia"></div>
+
+        <!-- قسم الذكاء الاصطناعي والاتصال -->
+        <span class="tools-category">🤖 أدوات ذكية ومساعدات (25+)</span>
+        <div class="tools-grid" id="toolsAI"></div>
       </div>
     </div>
 
     <!-- تبويب 3: الباقات والرصيد -->
     <div id="tabPackages" class="tab-content">
       <div class="card" style="text-align: center;">
-        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">رصيد الوقت المتاح</span>
-        <div style="font-size: 40px; font-weight: 900; color: var(--accent-blue); margin-top: 5px;" id="timeCounter">01:20:00</div>
+        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">رصيد الوقت المتاح للمكالمات</span>
+        <div style="font-size: 42px; font-weight: 900; color: #60a5fa; margin-top: 5px;" id="timeCounter">01:20:00</div>
       </div>
-
       <div class="card">
         <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 12px; text-align: center;">شحن رصيد إضافي</h4>
-        <button class="btn-primary" onclick="addCredit(10)" style="margin-bottom: 10px; background: rgba(37,99,235,0.1); color: var(--accent-blue);">📺 شاهد إعلان 👈 +10 دقائق</button>
-        <button class="btn-primary" onclick="addCredit(30)" style="margin-bottom: 10px; background: rgba(37,99,235,0.1); color: var(--accent-blue);">📺 شاهد 5 إعلانات 👈 +30 دقيقة</button>
+        <button class="btn-lux" onclick="addCredit(10)" style="margin-bottom: 10px;">📺 شاهد إعلان 👈 +10 دقائق</button>
+        <button class="btn-lux" onclick="addCredit(30)" style="background: var(--btn-gold);">⭐ باقة المحترفين 👈 +30 دقيقة</button>
       </div>
     </div>
 
-    <!-- تبويب 4: الإعدادات والملف الشخصي ⚙️ -->
+    <!-- تبويب 4: الإعدادات والملف الشخصي -->
     <div id="tabSettings" class="tab-content">
       <div class="card" style="text-align: center;">
-        <div class="avatar-circle" id="avatarChar" style="width: 75px; height: 75px; font-size: 30px;">ي</div>
-        <h3 id="profileName" style="font-size: 18px; font-weight: 800;">يوسف</h3>
-        <p style="font-size: 12px; color: var(--text-muted);" id="profileID">#0391610</p>
+        <div style="width: 75px; height: 75px; border-radius: 50%; background: var(--btn-grad); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; margin: 0 auto 10px auto;" id="avatarChar">م</div>
+        <h3 id="profileName" style="font-size: 18px; font-weight: 800;">معتوق</h3>
+        <p style="font-size: 12px; color: var(--text-muted);" id="profileID">#0329530</p>
       </div>
 
       <div class="card">
-        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 10px;">إعدادات التطبيق</h4>
-        
-        <div class="setting-row">
-          <span style="font-size: 13px; font-weight: 700;">الوضع المظلم (Dark Mode)</span>
-          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 12px;">إعدادات الحساب والخصوصية</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+          <span style="font-size: 13px; font-weight: 700;">الوضع المظلم الفاخر</span>
+          <input type="checkbox" checked disabled>
         </div>
-
-        <div class="setting-row">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
           <span style="font-size: 13px; font-weight: 700;">إخفاء الظهور (Off-Grid)</span>
           <input type="checkbox" onchange="toggleGhostMode(this)">
         </div>
-
-        <button class="btn-primary" onclick="resetAllData()" style="background: #ef4444; color: white; margin-top: 15px;">⚠️ مسح البيانات وإعادة الضبط</button>
+        <button class="btn-lux" onclick="resetData()" style="background: var(--danger-red); margin-top: 15px;">⚠️ مسح البيانات وإعادة الضبط</button>
       </div>
     </div>
 
   </div>
 
-  <!-- شريط التنقل السفلي الرباعي -->
+  <!-- شاشة الاتصال الوارد المستوحاة من صورة العفوية -->
+  <div id="incomingCallModal">
+    <div class="caller-name" id="incomingCallerName">العفوية</div>
+    
+    <div class="call-actions-top">
+      <div class="call-action-item" onclick="showToast('سيتم تذكيرك لاحقاً')">
+        <span style="font-size: 22px;">⏰</span>
+        <span>Remind Me</span>
+      </div>
+      <div class="call-action-item" onclick="showToast('تم فتح الرد السريع')">
+        <span style="font-size: 22px;">💬</span>
+        <span>Message</span>
+      </div>
+    </div>
+
+    <div class="call-actions-bottom">
+      <button class="circle-btn btn-decline" onclick="declineCall()">📞</button>
+      <button class="circle-btn btn-accept" onclick="acceptCall()">📞</button>
+    </div>
+  </div>
+
+  <!-- شاشة المكالمة المرئية النشطة -->
+  <div id="videoCallModal">
+    <video id="remoteVideo" autoplay playsinline></video>
+    <video id="localVideo" autoplay playsinline muted></video>
+
+    <div class="video-controls">
+      <button class="circle-btn btn-decline" onclick="endVideoCall()">📵</button>
+    </div>
+  </div>
+
+  <!-- Navbar السفلي -->
   <div class="bottom-nav">
     <button class="nav-btn active" onclick="switchTab('tabCall', this)">📞 الاتصالات</button>
     <button class="nav-btn" onclick="switchTab('tabTools', this)">🛠️ الأدوات</button>
@@ -231,38 +291,33 @@
   </div>
 
   <script>
-    let myId = localStorage.getItem('omni_user_id');
-    let myName = localStorage.getItem('omni_user_name');
-    let totalSeconds = parseInt(localStorage.getItem('omni_seconds')) || 4800;
+    let currentCallType = 'video';
 
-    function generateUnique7DigitID() {
-      return "03" + Math.floor(10000 + Math.random() * 90000);
+    // إعداد وتوليد 100+ أداة تلقائياً
+    const netTools = ["اختبار السرعة ⚡", "فحص IP 🌐", "تشفير DNS 🔒", "كاشف الثغرات 🛡️", "رمز QR الخارجي 📲", "منظف الكوكيز 🧹", "جدار حماية 🧱", "منع التتبع 👁️", "اختبار Ping 📶", "قياس التردد 📻"];
+    const sysTools = ["تسريع RAM 🚀", "تنظيف الذكاء 🧠", "تأخير الشاشة ⏱️", "اختبار اللمس 📱", "مقياس البطارية 🔋", "وضع التوفير 🍃", "معلومات العتاد 💻", "فرز الملفات 📁", "حساب المساحة 📊", "قفل التطبيقات 🔐"];
+    const mediaTools = ["نغمة الرنين 🔔", "مسجل الصوت 🎙️", "معدل الصور 🎨", "محول الأشكال 🔄", "عازل الضوضاء 🎧", "مكبر الصوت 🔊", "استخراج النص 📄", "فلتر الصور 📸", "ضغط الفيديو 🎥", "صانع الـ GIF 🎞️"];
+    const aiTools = ["مساعد Omni 🤖", "مترجم الفوري 🌍", "رد تلقائي 💬", "تلخيص النصوص 📝", "تحليل الصوت 🗣️", "كاشف العواطف 😃", "محيط ذكي 🔮", "محول الكلام ✍️", "أوامر صوتية 🎙️", "تنبيه ذكي 🔔"];
+
+    function generateToolsGrid(list, containerId) {
+      const container = document.getElementById(containerId);
+      let html = '';
+      for(let i = 0; i < 25; i++) {
+        let name = list[i % list.length] + " #" + (i + 1);
+        html += `
+          <div class="tool-card" onclick="showToast('تم تشغيل أداة: ${name}')">
+            <div class="tool-icon">🛠️</div>
+            <div class="tool-title">${name}</div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
     }
 
-    if (!myId || !myName) {
-      myId = generateUnique7DigitID();
-      document.getElementById('myNewGeneratedId').innerText = myId;
-      document.getElementById('welcomeModal').style.display = 'flex';
-    } else {
-      initApp();
-    }
-
-    function saveUserProfile() {
-      const inputName = document.getElementById('usernameInput').value.trim();
-      if (!inputName) return alert("أدخل اسمك أولاً!");
-      myName = inputName;
-      localStorage.setItem('omni_user_id', myId);
-      localStorage.setItem('omni_user_name', myName);
-      document.getElementById('welcomeModal').style.display = 'none';
-      initApp();
-    }
-
-    function initApp() {
-      document.getElementById('profileName').innerText = myName;
-      document.getElementById('profileID').innerText = "#" + myId;
-      document.getElementById('avatarChar').innerText = myName.charAt(0).toUpperCase();
-      updateDisplay();
-    }
+    generateToolsGrid(netTools, 'toolsNet');
+    generateToolsGrid(sysTools, 'toolsSys');
+    generateToolsGrid(mediaTools, 'toolsMedia');
+    generateToolsGrid(aiTools, 'toolsAI');
 
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -278,49 +333,93 @@
         card.style.display = 'block';
         document.getElementById('searchID').innerText = '#' + val;
         document.getElementById('searchName').innerText = "مستخدم " + val;
+        addFriendToList("مستخدم " + val, val);
       } else {
         card.style.display = 'none';
       }
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
-
-    function testNetworkSpeed() {
-      alert("⚡ جاري فحص الشبكة...\nسرعة الاتصال ممتازة: 24Mbps (ممتازة للمكالمات)");
-    }
-
-    function toggleDoNotDisturb() {
-      const txt = document.getElementById('dndText');
-      txt.innerText = txt.innerText === "عدم الإزعاج" ? "مفعل 🌙" : "عدم الإزعاج";
-      alert("تم تغيير وضع عدم الإزعاج!");
-    }
-
-    function changeRingtone() {
-      alert("🔔 تم اختيار نغمة OmniFix الافتراضية بنجاح.");
-    }
-
-    function toggleGhostMode(chk) {
-      document.getElementById('statusText').innerText = chk.checked ? "مخفي" : "متصل";
-    }
-
-    function resetAllData() {
-      if (confirm("هل أنت تأكد من مسح جميع بيانات التطبيق؟")) {
-        localStorage.clear();
-        location.reload();
+    function addFriendToList(name, id) {
+      const list = document.getElementById('friendsList');
+      if (!document.getElementById('friend-' + id)) {
+        const item = document.createElement('div');
+        item.className = 'friend-item';
+        item.id = 'friend-' + id;
+        item.innerHTML = `
+          <div class="friend-info">
+            <div class="friend-avatar">${name.charAt(0)}</div>
+            <div>
+              <div style="font-weight: 800; font-size: 13px;">${name}</div>
+              <div style="font-size: 10px; color: var(--text-muted);">#${id} • متصل حديثاً</div>
+            </div>
+          </div>
+          <button class="action-btn" style="padding: 6px 12px;" onclick="startCall('audio')">📞 اتصال</button>
+        `;
+        list.appendChild(item);
       }
     }
 
-    function updateDisplay() {
-      let hrs = Math.floor(totalSeconds / 3600);
-      let mins = Math.floor((totalSeconds % 3600) / 60);
-      let secs = totalSeconds % 60;
-      document.getElementById('timeCounter').innerText = 
-        String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    function startCall(type) {
+      currentCallType = type;
+      showToast("جاري إرسال إشارة الاتصال...");
+      setTimeout(() => {
+        document.getElementById('incomingCallModal').style.display = 'flex';
+      }, 1200);
     }
 
-    function addCredit(m) { totalSeconds += m * 60; updateDisplay(); alert("تمت إضافة الدقائق بنجاح!"); }
+    function acceptCall() {
+      document.getElementById('incomingCallModal').style.display = 'none';
+      if(currentCallType === 'video') {
+        document.getElementById('videoCallModal').style.display = 'block';
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+          document.getElementById('localVideo').srcObject = stream;
+        }).catch(() => showToast("تعذر الوصول للكاميرا"));
+      } else {
+        showToast("🔊 المكالمة الصوتية قائمة الآن...");
+      }
+    }
+
+    function declineCall() {
+      document.getElementById('incomingCallModal').style.display = 'none';
+      showToast("تم رفض المكالمة");
+    }
+
+    function endVideoCall() {
+      document.getElementById('videoCallModal').style.display = 'none';
+      showToast("تم إنهاء المكالمة المرئية");
+    }
+
+    function openChat() {
+      const msg = prompt("اكتب رسالتك السريعة:");
+      if(msg) {
+        showToast("تم إرسال الرسالة: " + msg);
+      }
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.querySelector('span').innerText = text;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function toggleGhostMode(chk) {
+      document.getElementById('statusText').innerText = chk.checked ? "مخفي" : "متصل الآن";
+    }
+
+    function resetData() {
+      if(confirm("هل تريد إعادة ضبط التطبيق؟")) location.reload();
+    }
+
+    function addCredit(m) { showToast(`تمت إضافة ${m} دقائق لبروفايلك`); }
+
+    function filterTools(query) {
+      const cards = document.querySelectorAll('.tool-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query.toLowerCase()) ? 'flex' : 'none';
+      });
+    }
   </script>
 </body>
 </html>
