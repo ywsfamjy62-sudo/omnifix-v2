@@ -1,8 +1,9 @@
+// index.js - خادم OmniFix المباشر مع خاصية منع التخزين المؤقت
 const express = require('express');
 const path = require('path');
 const app = express();
 
-// تعطيل التخزين المؤقت (Cache Control)
+// إعداد منع Cache لضمان تحديث الواجهة دائماً عند المستخدمين
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
   res.set('Pragma', 'no-cache');
@@ -10,15 +11,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// تقديم ملفات الواجهة
+// تقديم ملف الواجهة الرئيسي
 app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// تشغيل السيرفر
+// تشغيل الخادم على المنفذ المناسب لـ Vercel
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`OmniFix Server running on port ${PORT}`);
+  console.log(`OmniFix Owner Server is Online on Port ${PORT}`);
 });
