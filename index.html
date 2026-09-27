@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OmniFix Network</title>
-  <!-- مكتبة PeerJS للربط المباشر بين الهاتفين -->
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-  <!-- خط تجريدي أنيق -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <style>
@@ -20,13 +18,7 @@
       --text-muted: #94a3b8;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
 
     body {
       background-color: var(--bg-color);
@@ -36,309 +28,335 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 15px;
+      padding-bottom: 70px;
     }
 
+    /* شاشة التسجيل الترحيبية */
+    #welcomeModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(9, 13, 22, 0.95);
+      backdrop-filter: blur(15px);
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .welcome-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 25px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .generated-id {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent-color);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 10px;
+      border-radius: 12px;
+      margin: 15px 0;
+      letter-spacing: 3px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #0f172a;
+      color: white;
+      font-size: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-color);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* الحاوية الرئيسية والتنقل */
     .app-container {
       width: 100%;
       max-width: 420px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 15px;
     }
 
-    /* كارت الرصيد */
-    .balance-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* شريط التنقل السفي */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 65px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
     }
 
-    .balance-title {
-      font-size: 13px;
+    .nav-btn {
+      background: none;
+      border: none;
       color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .balance-time {
-      font-size: 36px;
-      font-weight: 800;
-      color: var(--accent-color);
-      margin-top: 5px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-    }
-
-    /* كادر الفيديو */
-    .video-card {
-      position: relative;
-      width: 100%;
-      height: 240px;
-      background: #000;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #localVideo {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      width: 90px;
-      height: 120px;
-      border-radius: 12px;
-      border: 2px solid var(--accent-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      z-index: 5;
-    }
-
-    /* باقات الإعلانات */
-    .packages-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 16px;
-    }
-
-    .pkg-title {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
-      text-align: center;
-      margin-bottom: 12px;
-      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
 
-    .pkg-grid {
+    .nav-btn.active { color: var(--accent-color); }
+
+    /* خيارات الاتصالات للشخص */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action-btn {
+      padding: 12px 5px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* صندوق الشات */
+    .chat-box {
+      height: 200px;
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 10px;
+      overflow-y: auto;
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .pkg-btn {
+    .chat-msg {
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      max-width: 80%;
+    }
+
+    .video-card {
+      position: relative;
       width: 100%;
-      padding: 12px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      color: var(--accent-color);
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      height: 200px;
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 15px;
     }
 
-    .pkg-btn:active {
-      transform: scale(0.98);
-      background: rgba(56, 189, 248, 0.25);
-    }
-
-    /* قسم الاتصال */
-    .call-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-top: 5px;
-    }
-
-    .main-call-btn {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      border: none;
-      color: white;
-      font-size: 18px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .main-call-btn.in-call {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
-    }
-
-    .main-call-btn:active {
-      transform: scale(0.92);
-    }
-
-    .status-badge {
-      font-size: 12px;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    #localVideo { position: absolute; bottom: 10px; left: 10px; width: 80px; height: 100px; border-radius: 8px; border: 2px solid var(--accent-color); }
   </style>
 </head>
 <body>
 
+  <div id="welcomeModal" style="display: none;">
+    <div class="welcome-card">
+      <h2 style="font-size: 20px;">مرحباً بك في OmniFix!</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 5px;">هذا هو رقم معرفك الخاص والفريد:</p>
+      <div class="generated-id" id="myNewGeneratedId">0300000</div>
+      <input type="text" id="usernameInput" class="input-field" placeholder="اكتب اسمك هنا...">
+      <button class="btn-action" onclick="saveUserProfile()">التالي والدخول</button>
+    </div>
+  </div>
+
   <div class="app-container">
-    
-    <!-- رصيد الوقت -->
-    <div class="balance-card">
-      <div class="balance-title">رصيد الاتصال المتبقي</div>
-      <div class="balance-time" id="timeCounter">00:00:00</div>
-    </div>
 
-    <!-- شاشة المكالمة المرئية -->
-    <div class="video-card">
-      <video id="remoteVideo" autoplay playsinline></video>
-      <video id="localVideo" autoplay playsinline muted></video>
-    </div>
+    <div id="tabCall" class="tab-content active">
+      <div style="background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);">
+        <label style="font-size: 12px; color: var(--text-muted);">البحث عن شخص للاتصال به:</label>
+        <input type="number" id="targetIdInput" class="input-field" placeholder="أدخل الرقم المكون من 7 أرقام..." style="margin-top: 5px;">
 
-    <!-- باقات مشاهدة الإعلانات -->
-    <div class="packages-card">
-      <div class="pkg-title">احصل على دقائق اتصال مجانية</div>
-      <div class="pkg-grid">
-        <button class="pkg-btn" onclick="addCredit(10)">
-          <span>شاهد إعلان واحد</span>
-          <span>+10 دقائق</span>
-        </button>
-        <button class="pkg-btn" onclick="addCredit(30)">
-          <span>شاهد 5 إعلانات</span>
-          <span>+30 دقيقة</span>
-        </button>
-        <button class="pkg-btn" onclick="addCredit(50)">
-          <span>شاهد 10 إعلانات</span>
-          <span>+50 دقيقة</span>
-        </button>
+        <div class="action-grid">
+          <button class="action-btn" onclick="startCall('video')">📹 فيديو</button>
+          <button class="action-btn" onclick="startCall('audio')">📞 صوت فقط</button>
+          <button class="action-btn" onclick="toggleChatWindow()">💬 رسائل</button>
+        </div>
+      </div>
+
+      <div class="video-card" style="margin-top: 15px;">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <video id="localVideo" autoplay playsinline muted></video>
+      </div>
+
+      <div id="chatSection" style="display: none; background: var(--card-bg); padding: 12px; border-radius: 16px;">
+        <div style="font-size: 13px; font-weight: 700;">المحادثة المباشرة</div>
+        <div class="chat-box" id="chatBox"></div>
+        <div style="display: flex; gap: 5px; margin-top: 8px;">
+          <input type="text" id="chatInput" class="input-field" placeholder="اكتب رسالة..." style="margin:0;">
+          <button class="btn-action" onclick="sendMessage()" style="width: 70px;">إرسال</button>
+        </div>
       </div>
     </div>
 
-    <!-- زر الاتصال المباشر -->
-    <div class="call-controls">
-      <button class="main-call-btn" id="callBtn" onclick="toggleCall()">اتصال</button>
-      <div class="status-badge" id="statusText">جاري تهيئة شبكة OmniFix...</div>
+    <div id="tabPackages" class="tab-content">
+      <div style="background: var(--card-bg); padding: 20px; border-radius: 20px; text-align: center;">
+        <div style="font-size: 13px; color: var(--text-muted);">رصيد الوقت المتبقي</div>
+        <div style="font-size: 36px; font-weight: 800; color: var(--accent-color);" id="timeCounter">00:00:00</div>
+      </div>
+
+      <div style="background: var(--card-bg); padding: 15px; border-radius: 20px; margin-top: 15px;">
+        <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px; text-align: center;">باقات مشاهدة الإعلانات</div>
+        <button class="btn-action" onclick="addCredit(10)" style="margin-bottom: 8px; background: rgba(56,189,248,0.2); color: var(--accent-color);">شاهد إعلان واحد 👈 +10 دقائق</button>
+        <button class="btn-action" onclick="addCredit(30)" style="margin-bottom: 8px; background: rgba(56,189,248,0.2); color: var(--accent-color);">شاهد 5 إعلانات 👈 +30 دقيقة</button>
+        <button class="btn-action" onclick="addCredit(50)" style="background: rgba(56,189,248,0.2); color: var(--accent-color);">شاهد 10 إعلانات 👈 +50 دقيقة</button>
+      </div>
+    </div>
+
+    <div id="tabProfile" class="tab-content">
+      <div style="background: var(--card-bg); padding: 20px; border-radius: 20px; text-align: center;">
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent-color); color: #000; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; margin: 0 auto 10px auto;" id="avatarChar">U</div>
+        <h3 id="profileName" style="font-size: 18px;">المستخدم</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">رقم المعرف الفريد الخاص بك:</p>
+        <div class="generated-id" id="profileID">0000000</div>
+      </div>
     </div>
 
   </div>
 
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('tabCall', this)">📞 الاتصالات</button>
+    <button class="nav-btn" onclick="switchTab('tabPackages', this)">💎 الباقات</button>
+    <button class="nav-btn" onclick="switchTab('tabProfile', this)">👤 الملف الشخصي</button>
+  </div>
+
   <script>
+    let myId = localStorage.getItem('omni_user_id');
+    let myName = localStorage.getItem('omni_user_name');
     let totalSeconds = parseInt(localStorage.getItem('omni_seconds')) || 0;
-    let timerInterval = null;
-    let isCalling = false;
-    let localStream = null;
     let peer = null;
-    let currentCall = null;
+    let conn = null;
 
-    const TARGET_PEER_ID = "omnifix-user-target"; 
-    const MY_PEER_ID = "omnifix-user-main";
+    // توليد رقم فريد مكون من 7 أرقام يبدأ بـ 03
+    function generateUnique7DigitID() {
+      let randomNum = Math.floor(10000 + Math.random() * 90000);
+      return "03" + randomNum;
+    }
 
-    async function initApp() {
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        document.getElementById('localVideo').srcObject = localStream;
+    // التحقق عند فتح التطبيق لأول مرة
+    if (!myId || !myName) {
+      myId = generateUnique7DigitID();
+      document.getElementById('myNewGeneratedId').innerText = myId;
+      document.getElementById('welcomeModal').style.display = 'flex';
+    } else {
+      initApp();
+    }
 
-        peer = new Peer(MY_PEER_ID);
+    function saveUserProfile() {
+      const inputName = document.getElementById('usernameInput').value.trim();
+      if (!inputName) { alert("يرجى كتابة اسمك لأول مرة!"); return; }
+      
+      myName = inputName;
+      localStorage.setItem('omni_user_id', myId);
+      localStorage.setItem('omni_user_name', myName);
+      document.getElementById('welcomeModal').style.display = 'none';
+      initApp();
+    }
 
-        peer.on('open', () => {
-          document.getElementById('statusText').innerText = "شبكة OmniFix متصلة وجاهزة";
-        });
+    function initApp() {
+      document.getElementById('profileName').innerText = myName;
+      document.getElementById('profileID').innerText = myId;
+      document.getElementById('avatarChar').innerText = myName.charAt(0).toUpperCase();
+      updateDisplay();
 
-        peer.on('call', (call) => {
-          call.answer(localStream);
-          call.on('stream', (remoteStream) => {
-            document.getElementById('remoteVideo').srcObject = remoteStream;
-          });
-          currentCall = call;
-          startTimer();
-        });
+      // إنشاء نقطة الشبكة باسم المعرف الفريد الخاص بالهاتف
+      peer = new Peer(myId);
 
-      } catch (err) {
-        document.getElementById('statusText').innerText = "يرجى منح صلاحيات الكاميرا والميكروفون";
-      }
+      peer.on('connection', (c) => {
+        conn = c;
+        setupChatListener();
+      });
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
     }
 
     function updateDisplay() {
       let hrs = Math.floor(totalSeconds / 3600);
       let mins = Math.floor((totalSeconds % 3600) / 60);
       let secs = totalSeconds % 60;
-      
       document.getElementById('timeCounter').innerText = 
-        String(hrs).padStart(2, '0') + ':' + 
-        String(mins).padStart(2, '0') + ':' + 
-        String(secs).padStart(2, '0');
-
+        String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
       localStorage.setItem('omni_seconds', totalSeconds);
     }
 
-    function addCredit(minutes) {
-      totalSeconds += minutes * 60;
+    function addCredit(mins) {
+      totalSeconds += mins * 60;
       updateDisplay();
-      alert("تم إضافة " + minutes + " دقائق لرصيدك بنجاح!");
+      alert("تمت إضافة " + mins + " دقائق لخانة رصيدك!");
     }
 
-    function toggleCall() {
-      const callBtn = document.getElementById('callBtn');
-      const statusText = document.getElementById('statusText');
+    function toggleChatWindow() {
+      const target = document.getElementById('targetIdInput').value;
+      if (!target) { alert("أدخل رقم المعرف أولاً لبدء المحادثة!"); return; }
+      document.getElementById('chatSection').style.display = 'block';
+      
+      conn = peer.connect(target);
+      setupChatListener();
+    }
 
-      if (!isCalling) {
-        if (totalSeconds <= 0) {
-          alert("رصيدك انتهى! شاهد إعلاناً للحصول على دقائق مجانية.");
-          return;
-        }
+    function setupChatListener() {
+      conn.on('data', (data) => {
+        const box = document.getElementById('chatBox');
+        box.innerHTML += `<div class="chat-msg"><b>صديقك:</b> ${data}</div>`;
+      });
+    }
 
-        const call = peer.call(TARGET_PEER_ID, localStream);
-        call.on('stream', (remoteStream) => {
-          document.getElementById('remoteVideo').srcObject = remoteStream;
-        });
-
-        currentCall = call;
-        isCalling = true;
-        callBtn.innerText = "إنهاء";
-        callBtn.classList.add('in-call');
-        statusText.innerText = "جاري الاتصال المباشر...";
-        
-        startTimer();
-      } else {
-        if (currentCall) currentCall.close();
-        stopTimer();
+    function sendMessage() {
+      const msg = document.getElementById('chatInput').value;
+      if (msg && conn) {
+        conn.send(msg);
+        document.getElementById('chatBox').innerHTML += `<div class="chat-msg" style="background: rgba(56,189,248,0.2); align-self: flex-end;"><b>أنت:</b> ${msg}</div>`;
+        document.getElementById('chatInput').value = '';
       }
     }
-
-    function startTimer() {
-      timerInterval = setInterval(() => {
-        if (totalSeconds > 0) {
-          totalSeconds--;
-          updateDisplay();
-        } else {
-          stopTimer();
-          alert("انتهى رصيدك! تم إنهاء المكالمة.");
-        }
-      }, 1000);
-    }
-
-    function stopTimer() {
-      isCalling = false;
-      clearInterval(timerInterval);
-      const callBtn = document.getElementById('callBtn');
-      callBtn.innerText = "اتصال";
-      callBtn.classList.remove('in-call');
-      document.getElementById('statusText').innerText = "تم إنهاء المكالمة";
-    }
-
-    updateDisplay();
-    initApp();
   </script>
 </body>
 </html>
